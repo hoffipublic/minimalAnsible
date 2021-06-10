@@ -1,15 +1,3 @@
 all:
   hosts:
-    allhost1:
-    allhost2:
-local:
-  hosts:
     localhost:
-atlanta:
-  hosts:
-    hostname1:
-      ansible_port: 5555
-      ansible_host: 127.0.0.1
-  vars:
-    ntp_server: ntp.atlanta.example.com
-    proxy: proxy.atlanta.example.com
