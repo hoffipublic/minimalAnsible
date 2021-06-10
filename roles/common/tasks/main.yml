@@ -1,0 +1,17 @@
+
+- debug:
+   msg: "This always displays"
+   #when: ansible_default_ipv4.gateway is defined
+
+- debug:
+   msg: "This only displays with ansible-playbook -vv+"
+   verbosity: 2
+
+- name: Get uptime information
+  ansible.builtin.shell: /usr/bin/uptime
+  register: result
+
+- name: Print return information from the previous task
+  ansible.builtin.debug:
+    var: result
+    verbosity: 2
