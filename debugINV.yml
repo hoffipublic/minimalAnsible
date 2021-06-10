@@ -7,8 +7,7 @@ local:
     localhost:
 atlanta:
   hosts:
-    host1:
-    host2:
+    hostname1:
       ansible_port: 5555
       ansible_host: 127.0.0.1
   vars:
