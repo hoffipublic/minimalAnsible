@@ -15,3 +15,9 @@
   ansible.builtin.debug:
     var: result
     verbosity: 2
+
+- name: Hello World
+  command: echo "Hello World!"
+  register: helloworld
+
+- debug: var=helloworld.stdout
