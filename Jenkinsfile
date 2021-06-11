@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    options {
+        disableConcurrentBuilds()
+    }
+
     environment {
         SOME = 'SOME env variable set'
         DB_ENGINE = 'sqlite'
@@ -30,6 +34,25 @@ pipeline {
                 sh 'gradle --version'
             }
         }
+    }
+    stage('MyStage') {
+        ansibleTower(
+            towerServer: 'Hoffis MacBook AWX',
+            towerCredentialsId: 'AWX',
+            templateType: 'job',
+            jobTemplate: 'hoffijob',
+            towerLogLevel: 'full',
+            inventory: 'hoffiINV',
+            jobTags: '',
+            skipJobTags: '',
+            limit: '',
+            removeColor: false,
+            verbose: true,
+            credential: 'AWX',
+            extraVars: '''---
+my_var:  "Jenkins Test"''',
+            async: false
+        )
     }
     post {
         always {
