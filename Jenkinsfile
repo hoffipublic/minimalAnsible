@@ -35,23 +35,25 @@ pipeline {
             }
         }
         stage('MyStage') {
-            ansibleTower(
-                towerServer: 'Hoffis MacBook AWX',
-                towerCredentialsId: 'AWX',
-                templateType: 'job',
-                jobTemplate: 'hoffijob',
-                towerLogLevel: 'full',
-                inventory: 'hoffiINV',
-                jobTags: '',
-                skipJobTags: '',
-                limit: '',
-                removeColor: false,
-                verbose: true,
-                credential: 'AWX',
-                extraVars: '''---
+            steps {
+                ansibleTower(
+                    towerServer: 'Hoffis MacBook AWX',
+                    towerCredentialsId: 'AWX',
+                    templateType: 'job',
+                    jobTemplate: 'hoffijob',
+                    towerLogLevel: 'full',
+                    inventory: 'hoffiINV',
+                    jobTags: '',
+                    skipJobTags: '',
+                    limit: '',
+                    removeColor: false,
+                    verbose: true,
+                    credential: 'AWX',
+                    extraVars: '''---
 my_var:  "Jenkins Test"''',
-                async: false
-            )
+                    async: false
+                )
+            }
         }
     }
     post {
