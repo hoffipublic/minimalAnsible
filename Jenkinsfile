@@ -37,7 +37,7 @@ pipeline {
         stage('MyStage') {
             steps {
                 ansibleTower(
-                    towerServer: 'https://localhost:8043/',
+                    towerServer: 'AWX Hoffis MacBook',
                     towerCredentialsId: 'AWX',
                     templateType: 'job',
                     jobTemplate: 'hoffijob',
