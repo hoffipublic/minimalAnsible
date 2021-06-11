@@ -47,7 +47,7 @@ pipeline {
                     limit: '',
                     removeColor: false,
                     verbose: true,
-                    credential: 'AWX',
+                    credential: 'FolderHoffiAWX',
                     extraVars: '''---
 my_var:  "Jenkins Test"''',
                     async: false
