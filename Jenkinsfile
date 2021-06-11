@@ -38,7 +38,6 @@ pipeline {
             steps {
                 ansibleTower(
                     towerServer: 'AWX Hoffis MacBook',
-                    towerCredentialsId: 'AWX',
                     templateType: 'job',
                     jobTemplate: 'hoffijob',
                     towerLogLevel: 'full',
