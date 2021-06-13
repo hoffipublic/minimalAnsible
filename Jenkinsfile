@@ -38,6 +38,7 @@ pipeline {
             steps {
                 ansibleTower(
                     towerServer: 'AWX Hoffis MacBook',
+                    towerCredentialsId: 'FolderHoffiAWX',
                     templateType: 'job',
                     jobTemplate: 'hoffijob',
                     towerLogLevel: 'full',
@@ -47,7 +48,7 @@ pipeline {
                     limit: '',
                     removeColor: false,
                     verbose: true,
-                    credential: 'FolderHoffiAWX',
+                    credential: 'hoffi',
                     extraVars: '''---
 my_var:  "Jenkins Test"''',
                     async: false
