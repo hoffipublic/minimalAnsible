@@ -1,9 +1,17 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bash # only for formatting of file, this file should be sourced only
+
+if [[ ! -z $awxbashlibsourced ]] ; then return ; fi
+
+AWXBASHLIB_SCRIPTDIR="$( dirname "${BASH_SOURCE[0]}" )"
+>&2 echo -e "sourcing awxbashlib.sh in ${AWXBASHLIB_SCRIPTDIR}"
+awxbashlibsourced="yes"
+source "${AWXBASHLIB_SCRIPTDIR}/../common/commonbashlib.sh"
+
 
 export AWX_SERVER="localhost:8043"
 export HTTPS_AWX="https://${AWX_SERVER}"
-export APIV="api/v2"
-export AWX_URL="${HTTPS_AWX}/${APIV}"
+export APIV="/api/v2"
+export AWX_URL="${HTTPS_AWX}${APIV}"
 export CURLBASE="curl -L -s -S -k"
 export awxuser=unknown
 export awxpassword=unknown
@@ -62,3 +70,6 @@ function awx_login_sessionid() {
     $HTTPS_AWX/api/login/ -D - -o /dev/null \
         | sed -n -E "s/^Set-Cookie: sessionid=(.*); expires.*$/\1/p"
 }
+
+
+>&2 echo -e "done awxbashlib.sh"
