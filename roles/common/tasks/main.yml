@@ -1,11 +1,11 @@
 
 - debug:
-   msg: "This always displays"
-   #when: ansible_default_ipv4.gateway is defined
+    msg: "This always displays"
+    #when: ansible_default_ipv4.gateway is defined
 
 - debug:
-   msg: "This only displays with ansible-playbook -vv+"
-   verbosity: 2
+    msg: "This only displays with ansible-playbook -vv+"
+    verbosity: 2
 
 - name: Get uptime information
   ansible.builtin.shell: /usr/bin/uptime
@@ -21,3 +21,26 @@
   register: helloworld
 
 - debug: var=helloworld.stdout
+
+# be sure to have secrets/ folder in your .gitignore as /secrets/
+- name: Bare include secret to git pull/clone
+  include_vars: secrets/gitsecrets.yml
+
+- name: checkout configAndState Bitbucket repo
+  git:
+    repo: 'https://hoffimuc:{{configRepoToken}}@github.com/hoffitmp/dassaultConfig.git'
+    dest: "{{playbook_dir}}/../dassaultConfig"
+
+- name: Bare include (free-form) unencrypted.yml vars file
+  include_vars: "{{playbook_dir}}/../dassaultConfig/afolder/unencrypted.yml"
+
+- name: debug unencrypted var from config dir
+  ansible.builtin.debug:
+    var: this.isa.varname
+
+- name: Bare include vault encrypted file
+  include_vars: "{{playbook_dir}}/../dassaultConfig/afolder/avarsfile.yml"
+
+- name: debug encrypted var from config dir (should be 'two')
+  debug:
+    var: some.structure.anArray[1]
