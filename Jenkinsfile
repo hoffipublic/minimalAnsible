@@ -1,3 +1,8 @@
+import groovy.transform.Field
+
+@Field
+def jenkinsServer = "${env.JENKINS_HOME}" =~ /^https?:\/\/([^.]+).*$/[0][1]
+
 pipeline {
     agent any
 
@@ -13,6 +18,7 @@ pipeline {
     stages {
         stage('Setup') {
             steps {
+                sh "echo \"${jenkinsServer}\""
                 sh 'echo "sh echo Hello World ($SOME)"'
                 echo "native echo Database engine is ${DB_ENGINE}"
                 sh '''

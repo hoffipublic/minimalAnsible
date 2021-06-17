@@ -1,3 +1,10 @@
+---
+
+- hosts: 127.0.0.1
+  gather_facts: no
+  roles:
+    - 00setup
+
 - hosts: all
   gather_facts: no
   tasks:
@@ -5,3 +12,4 @@
   #  include_vars: env_vars/{{ targetprofile|upper }}.yml
   roles:
     - common
+    #- ccf_tenant

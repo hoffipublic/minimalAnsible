@@ -1,0 +1,10 @@
+---
+# be sure to have secrets/ folder in your .gitignore as /secrets/
+- name: Bare include secret to git pull/clone
+  include_vars: secrets/gitsecrets.yml
+
+- name: checkout configAndState Bitbucket repo
+  git:
+    repo: 'https://hoffimuc:{{configRepoToken}}@github.com/hoffitmp/dassaultConfig.git'
+    dest: "{{playbook_dir}}/../dassaultConfig"
+
