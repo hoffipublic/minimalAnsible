@@ -14,17 +14,21 @@ pipeline {
         stage('Setup') {
             steps {
                 script {
-                    println "Using: ${env.BRANCH_NAME}/Jenkinsfile on ${env.JENKINS_URL}"
+                    def boolean allOk = true
                     if (env.BRANCH_NAME == 'master') {
                         if (env.JENKINS_URL != "http://localhost:8090/") { // WITH trailing slash
+                            allOk = false
                             error "Error: running pipeline of branch:master on Jenkins ${env.JENKINS_URL}"
                         }
                     } else if (env.BRANCH_NAME == 'prod') {
                         if (env.JENKINS_URL != "https://localhost:6666/") { // WITH trailing slash
+                            allOk = false
                             error "Error: running pipeline of branch:prod on Jenkins ${env.JENKINS_URL}"
                         }
                     }
                 }
+                if (allOk) { println "Using: ${env.BRANCH_NAME}/Jenkinsfile on ${env.JENKINS_URL}" }
+                
                 sh "echo \"${jenkinsServer}\""
                 sh 'echo "sh echo Hello World ($SOME)"'
                 echo "native echo Database engine is ${DB_ENGINE}"
