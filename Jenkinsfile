@@ -22,11 +22,14 @@ pipeline {
                         prodJenkinsServerName = credentials('prodJenkinsServerName')
                     } finally {}
                     //def currentJenkinsServer = ("${env.JENKINS_URL}" =~/^https?:\/\/([^\/]*).*$/)[0][1]
-                    if ( (env.BRANCH_NAME == "master") && (env.JENKINS_URL != devJenkinsServerName) ) {
-                        error "Error: running pipeline branch:${env.BRANCH_NAME} on Jenkins ${env.JENKINS_URL}"
-                    }
-                    if ( (env.BRANCH_NAME == "prod") && (env.JENKINS_URL != prodJenkinsServerName) ) {
-                        error "Error: running pipeline branch:${env.BRANCH_NAME} on Jenkins ${env.JENKINS_URL}"
+                    if (env.BRANCH_NAME == "master") {
+                        if (env.JENKINS_URL != devJenkinsServerName) {
+                            error "Error: running pipeline of branch:master on Jenkins ${env.JENKINS_URL}"
+                        }
+                    } else if (env.BRANCH_NAME == "prod") {
+                        if (env.JENKINS_URL != prodJenkinsServerName) {
+                            error "Error: running pipeline of branch:prod on Jenkins ${env.JENKINS_URL}"
+                        }
                     }
                 }
                 sh "echo \"${jenkinsServer}\""
