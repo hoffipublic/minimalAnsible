@@ -14,7 +14,8 @@ pipeline {
         stage('Setup') {
             steps {
                 script {
-                    //def jenkinsServer = "${env.JENKINS_HOME}" =~ /^https?:\/\/([^.]+).*$/[0][1]
+                    def jenkinsServer = "${env.JENKINS_URL}" =~ /^https?:\/\/([^/]+).*$/[0][1]
+                    println "HERE ${jenkinsServer}"
                     if (!("${env.JENKINS_URL}" =~ /^https:\/\/localhost/)) {
                         error "Error: running pipeline branch:${BRANCH_NAME} on Jenkins ${env.JENKINS_URL}"
                     }
