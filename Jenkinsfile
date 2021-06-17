@@ -14,12 +14,12 @@ pipeline {
         stage('Setup') {
             steps {
                 script {
-                    println "HERE ${env.JENKINS_URL}"
-
-                    def jenkinsServer = "${env.JENKINS_URL}" =~ /^https?:\/\/([^\/]+).*$/[0][1]
-                    println "jenkinsServer: ${jenkinsServer}"
-                    if (!("${env.JENKINS_URL}" =~ /^https:\/\/localhost/)) {
-                        error "Error: running pipeline branch:${BRANCH_NAME} on Jenkins ${env.JENKINS_URL}"
+                    println "Using: ${branch}/Jenkinsfile on ${env.JENKINS_URL}"
+                    def devJenkinsServerName = credentials('devJenkinsServerName')
+                    def currentJenkinsServer = ("${env.JENKINS_URL}" =~/^https?:\/\/([^\/]*).*$/)[0][1]
+                    println "devJenkinsServerName: ${devJenkinsServerName}"
+                    if ( (branch == "master") && (currentJenkinsServer != devJenkinsServerName) ) {
+                        error "Error: running pipeline branch:${branch} on Jenkins ${env.JENKINS_URL}"
                     }
                 }
                 sh "echo \"${jenkinsServer}\""
