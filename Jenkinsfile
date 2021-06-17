@@ -15,18 +15,12 @@ pipeline {
             steps {
                 script {
                     println "Using: ${env.BRANCH_NAME}/Jenkinsfile on ${env.JENKINS_URL}"
-                    def String devJenkinsServerName = 'undefined'
-                    def String prodJenkinsServerName = 'undefined'
-                    try { devJenkinsServerName = credentials('devJenkinsServerName') } finally { }
-                    try { prodJenkinsServerName = credentials('prodJenkinsServerName') } finally { }
-                    sh(script: "./scripts/echoArgs.sh 'dev:' ${devJenkinsServerName} 'prod:' ${prodJenkinsServerName}", returnStdout: true)
-                    //def currentJenkinsServer = ("${env.JENKINS_URL}" =~/^https?:\/\/([^\/]*).*$/)[0][1]
                     if (env.BRANCH_NAME == 'master') {
-                        if (env.JENKINS_URL != devJenkinsServerName) {
+                        if (env.JENKINS_URL != "http://localhost:8090") {
                             error "Error: running pipeline of branch:master on Jenkins ${env.JENKINS_URL}"
                         }
                     } else if (env.BRANCH_NAME == 'prod') {
-                        if (env.JENKINS_URL != prodJenkinsServerName) {
+                        if (env.JENKINS_URL != "https://localhost:6666") {
                             error "Error: running pipeline of branch:prod on Jenkins ${env.JENKINS_URL}"
                         }
                     }
