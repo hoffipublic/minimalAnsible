@@ -15,11 +15,15 @@ pipeline {
             steps {
                 script {
                     println "Using: ${env.BRANCH_NAME}/Jenkinsfile on ${env.JENKINS_URL}"
-                    def devJenkinsServerName = "undefined"
-                    def prodJenkinsServerName = "undefined"
-                    try { devJenkinsServerName = credentials('devJenkinsServerName') } finally {}
-                    try { prodJenkinsServerName = credentials('prodJenkinsServerName') } finally {}
-                    println "from credentials: dev:${devJenkinsServerName.collect{it}} prod:${prodJenkinsServerName.collect{it}}"
+                    def String devJenkinsServerName = 'undefined'
+                    def String prodJenkinsServerName = 'undefined'
+                    try { devJenkinsServerName = credentials('devJenkinsServerName') } finally { }
+                    try { prodJenkinsServerName = credentials('prodJenkinsServerName') } finally { }
+                    print "from credentials: dev:"
+                    devJenkinsServerName.each{print it}
+                    print "\n prod:"
+                    prodJenkinsServerName.each{print it}}
+                    print "\n"
                     //def currentJenkinsServer = ("${env.JENKINS_URL}" =~/^https?:\/\/([^\/]*).*$/)[0][1]
                     if (env.BRANCH_NAME == 'master') {
                         if (env.JENKINS_URL != devJenkinsServerName) {
