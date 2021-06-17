@@ -19,7 +19,7 @@ pipeline {
                     def String prodJenkinsServerName = 'undefined'
                     try { devJenkinsServerName = credentials('devJenkinsServerName') } finally { }
                     try { prodJenkinsServerName = credentials('prodJenkinsServerName') } finally { }
-                    sh "echo \"from credentials: dev:${devJenkinsServerName} prod:${prodJenkinsServerName}\""
+                    sh(script: "./scripts/echoArgs.sh 'dev:' ${devJenkinsServerName} 'prod:' ${prodJenkinsServerName}", returnStdout: true)
                     //def currentJenkinsServer = ("${env.JENKINS_URL}" =~/^https?:\/\/([^\/]*).*$/)[0][1]
                     if (env.BRANCH_NAME == 'master') {
                         if (env.JENKINS_URL != devJenkinsServerName) {
