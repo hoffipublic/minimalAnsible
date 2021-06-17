@@ -1,7 +1,12 @@
 import groovy.transform.Field
+import jenkins.*
+import jenkins.model.*
+
+def theenv = binding.build.environment
+Jenkins.instance.getItemByFullName(theenv.job_name).setDisabled(false) 
 
 @Field
-def jenkinsServer = "${env.JENKINS_HOME}" =~ /^https?:\/\/([^.]+).*$/[0][1]
+def jenkinsServer = Jenkins.instance.getItemByFullName(theenv.JENKINS_HOME) =~ /^https?:\/\/([^.]+).*$/[0][1]
 
 pipeline {
     agent any
