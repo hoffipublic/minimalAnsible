@@ -22,7 +22,7 @@ pipeline {
                     print "from credentials: dev:"
                     devJenkinsServerName.each{print it}
                     print "\n prod:"
-                    prodJenkinsServerName.each{print it}}
+                    prodJenkinsServerName.each{print it}
                     print "\n"
                     //def currentJenkinsServer = ("${env.JENKINS_URL}" =~/^https?:\/\/([^\/]*).*$/)[0][1]
                     if (env.BRANCH_NAME == 'master') {
