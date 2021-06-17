@@ -16,7 +16,7 @@ pipeline {
                 script {
                     //def jenkinsServer = "${env.JENKINS_HOME}" =~ /^https?:\/\/([^.]+).*$/[0][1]
                     if (!("${env.JENKINS_URL}" =~ /^https:\/\/localhost/)) {
-                        error "exectuting wrong branch for this environment (C2/CC)"
+                        error "Error: running pipeline branch:${BRANCH_NAME} on Jenkins ${env.JENKINS_URL}"
                     }
                 }
                 sh "echo \"${jenkinsServer}\""
