@@ -16,11 +16,11 @@ pipeline {
                 script {
                     println "Using: ${env.BRANCH_NAME}/Jenkinsfile on ${env.JENKINS_URL}"
                     if (env.BRANCH_NAME == 'master') {
-                        if (env.JENKINS_URL != "http://localhost:8090") {
+                        if (env.JENKINS_URL != "http://localhost:8090/") { // WITH trailing slash
                             error "Error: running pipeline of branch:master on Jenkins ${env.JENKINS_URL}"
                         }
                     } else if (env.BRANCH_NAME == 'prod') {
-                        if (env.JENKINS_URL != "https://localhost:6666") {
+                        if (env.JENKINS_URL != "https://localhost:6666/") { // WITH trailing slash
                             error "Error: running pipeline of branch:prod on Jenkins ${env.JENKINS_URL}"
                         }
                     }
