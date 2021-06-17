@@ -17,9 +17,10 @@ pipeline {
                     println "Using: ${env.BRANCH_NAME}/Jenkinsfile on ${env.JENKINS_URL}"
                     def devJenkinsServerName = credentials('devJenkinsServerName')
                     def currentJenkinsServer = ("${env.JENKINS_URL}" =~/^https?:\/\/([^\/]*).*$/)[0][1]
-                    println "devJenkinsServerName: ${devJenkinsServerName}"
+                    println "devJenkinsServerName:         ${devJenkinsServerName}"
+                    println "actualJenkinsServer:  ${env.JENKINS_URL}"
                     if ( (env.BRANCH_NAME == "master") && (currentJenkinsServer != devJenkinsServerName) ) {
-                        error "Error: running pipeline branch:${branch} on Jenkins ${env.JENKINS_URL}"
+                        error "Error: running pipeline branch:${env.BRANCH_NAME} on Jenkins ${env.JENKINS_URL}"
                     }
                 }
                 sh "echo \"${jenkinsServer}\""
