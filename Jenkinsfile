@@ -26,8 +26,8 @@ pipeline {
                             error "Error: running pipeline of branch:prod on Jenkins ${env.JENKINS_URL}"
                         }
                     }
+                    if (allOk) { println "Using: ${env.BRANCH_NAME}/Jenkinsfile on ${env.JENKINS_URL}" }
                 }
-                if (allOk) { println "Using: ${env.BRANCH_NAME}/Jenkinsfile on ${env.JENKINS_URL}" }
                 
                 sh "echo \"${jenkinsServer}\""
                 sh 'echo "sh echo Hello World ($SOME)"'
