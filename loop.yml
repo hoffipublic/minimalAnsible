@@ -1,0 +1,30 @@
+---
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+  - name: include businessVars
+    include_vars: ./businessVars/busVars.yml
+
+  - name: "DEBUG3 -> write template variable to file"
+    template:
+      src: ifgroups.j2
+      dest: tmp/ifgroups.yml
+      mode: 0600
+    tags: DEBUG3
+
+  - name: extract interface data by jinja template
+    set_fact: 
+      theIfGroups: "{{ lookup('template', 'ifgroups.j2') | from_yaml }}"
+    ## theIfGroups:
+    ## - tenant_name: ccf_demo
+    ##   segment_name: segment1
+    ##   ifgroup_name: group1
+    ##   tag: untagged
+
+  - name: final output
+    debug:
+      msg: "{{ item.tenant_name }}__{{ item.segment_name }}__{{ item.ifgroup_name }}: {{ item.ifgroup_name }}:{{ item.tag }}"
+    loop: "{{ theIfGroups }}"

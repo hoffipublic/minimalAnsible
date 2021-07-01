@@ -1,0 +1,30 @@
+tenants:
+- tenant_name: ccf_demo
+  description: "ccf demo tenant"
+  state: present
+  segments:
+  - segment_name: segment1
+    state: present
+    ifgroups:
+    - ifgroup_name: group1
+      tag: untagged
+    - ifgroup_name: group2
+      tag: untagged
+- tenant_name: ccf_demo2
+  description: "ccf demo2 tenant"
+  state: absent
+  segments:
+  - segment_name: t2seg1
+    state: present
+    ifgroups:
+    - ifgroup_name: group3
+      tag: untagged
+- tenant_name: ccf_demo3
+  description: "ccf demo3 tenant"
+  state: absent
+  segments:
+  - segment_name: t3seg1
+    state: present
+- tenant_name: ccf_demo3
+  description: "ccf demo3 tenant"
+  state: present

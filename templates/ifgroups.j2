@@ -1,0 +1,10 @@
+{% for tenant in tenants %}
+{%- if tenant.segments is defined -%}{%- for segment in tenant.segments -%}
+{%- if segment.ifgroups is defined -%}{%- for ifgroup in segment.ifgroups -%}
+- tenant_name: {{ tenant.tenant_name }}
+  segment_name: {{ segment.segment_name }}
+  ifgroup_name: {{ ifgroup.ifgroup_name }}
+  tag: {{ ifgroup.tag }}
+{% endfor %}{% endif %}
+{% endfor %}{% endif %}
+{% endfor %}
