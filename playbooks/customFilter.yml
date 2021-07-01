@@ -1,0 +1,17 @@
+---
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+
+  # ansible will search dir filter_plugins/ by default on the same level as the playbook
+  # to have a "global" directory add the filter_plugins search dir to ansible.cfg
+  # e.g. if at the project root
+  # filter_plugins = ./filter_plugins
+  tasks:
+  - name: custom filter
+    debug:
+      msg: "{{ 'test'|a_filter }}"
+  - name: custom filter with params
+    debug:
+      msg: "{{ 'test'|another_filter('the','filters') }}"

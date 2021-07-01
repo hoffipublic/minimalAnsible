@@ -22,21 +22,22 @@
 
 
   tasks:
-  - name: write variable to file
+  - name: write variable to file {{ myfile | regex_replace('^.*/(.+/.+)$', './\1') }}
     copy:
       content: "{{ filevar }}"
       dest: "{{ myfile }}"
       mode: 0600  
 
   - name: execute shell commands
-    shell: "cat {{ myfile|quote }}"
+    shell:
+      cmd: "cat {{ myfile|quote }}"
     register: shellout
 
   - name: process shell command output
     debug:
       msg: "{{ shellout }}"
 
-  - name: read yaml variables from file
+  - name: read yaml variables from file {{ myfile | regex_replace('^.*/(.+/.+)$', './\1') }}
     include_vars: "{{ myfile }}"
 
   - name: debug read yaml variable
@@ -44,7 +45,7 @@
       msg: "{{ filerootyaml }}"
 
   # sure you also can use a jinja2.j2 template to write to a file!
-  - name: overwrite with nonsense
+  - name: overwrite with nonsense in {{ myfile | regex_replace('^.*/(.+/.+)$', './\1') }}
     copy:
       dest: "{{ myfile }}"
       mode: 0600
