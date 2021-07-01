@@ -4,20 +4,23 @@
   connection: local
   gather_facts: no
 
+  vars:
+    prjRoot: "{{ playbook_dir }}/.."
+
   tasks:
   - name: include businessVars
-    include_vars: ./businessVars/busVars.yml
+    include_vars: "{{ prjRoot }}/businessVars/busVars.yml"
 
   - name: "DEBUG3 -> write template variable to file"
     template:
-      src: ifgroups.j2
-      dest: tmp/ifgroups.yml
+      src: "{{ prjRoot }}/templates/ifgroups.j2"
+      dest: "{{ prjRoot }}/tmp/ifgroups.yml"
       mode: 0600
     tags: DEBUG3
 
   - name: extract interface data by jinja template
     set_fact: 
-      theIfGroups: "{{ lookup('template', 'ifgroups.j2') | from_yaml }}"
+      theIfGroups: "{{ lookup('template', '{{ prjRoot }}/templates/ifgroups.j2') | from_yaml }}"
     ## theIfGroups:
     ## - tenant_name: ccf_demo
     ##   segment_name: segment1
