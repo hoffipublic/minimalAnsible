@@ -1,0 +1,57 @@
+---
+
+- hosts: localhost
+  connection: local
+  gather_facts: no
+
+  vars:
+    prjRoot: "{{ playbook_dir }}/.."
+    myfile: "{{ prjRoot }}/tmp/myfile.txt"
+    filevar:
+      filerootyaml:
+        this_key: "is"
+        a: &anchorA
+          - multiline_key: "multiline"
+            yaml_file_key: "yaml file"
+            example_key: "example"
+        b:
+          <<: *anchorA
+        c:
+          - *anchorA
+        d: *anchorA
+
+
+  tasks:
+  - name: write variable to file
+    copy:
+      content: "{{ filevar }}"
+      dest: "{{ myfile }}"
+      mode: 0600  
+
+  - name: execute shell commands
+    shell: "cat {{ myfile|quote }}"
+    register: shellout
+
+  - name: process shell command output
+    debug:
+      msg: "{{ shellout }}"
+
+  - name: read yaml variables from file
+    include_vars: "{{ myfile }}"
+
+  - name: debug read yaml variable
+    debug:
+      msg: "{{ filerootyaml }}"
+
+  # sure you also can use a jinja2.j2 template to write to a file!
+  - name: overwrite with nonsense
+    copy:
+      dest: "{{ myfile }}"
+      mode: 0600
+      content: "{{ theContent }}"
+    vars:
+      theContent: |
+        This is
+          some
+         non
+        sense Text
