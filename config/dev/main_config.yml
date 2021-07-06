@@ -1,0 +1,83 @@
+
+---
+
+network:
+  vlan:
+    - name: "test1_ansible"
+      vlan_id: 4000
+    - name: "test2_ansible"
+      vlan_id: 4001
+
+tenants:
+  - tenant_name: ccf_demo
+    description: "ccf demo tenant"
+    state: present
+    segments:
+      - segment_name: segment1
+        state: present
+        ifgroups:
+          - ifgroup_name: group1
+            tag: untagged
+          - ifgroup_name: group2
+            tag: untagged
+  - tenant_name: ccf_demo2
+    description: "ccf demo2 tenant"
+    state: absent
+  - tenant_name: ccf_demo3
+    description: "ccf demo3 tenant"
+    state: present
+
+dadc_config:
+  - project_name: SuperIlot_A
+    dc_location: "dcp" # "dch"
+    project_ilots:
+      - ilot_name: subIlot_A1
+        compute_zones:
+        - compute_zone: A_ComputeA1_1
+          network: public
+          network_mask: "/24" # or T-shirt sizes S, M, L, XL
+          compute:
+            linux: 2
+            aix: 1
+            windows: 5
+          dedicated_vms: # inside compute_zone
+          - dvm_name: someName
+            dvm_type: shared
+        - compute_zone: A_ComputeA1_2
+          network: isolated
+          network_mask: "/30"
+          compute:
+            linux: 1
+        dedicated_vms:
+        - dvm_name: dedicatedName
+          dvm_type: dedicated
+      - ilot_name: subIlot_A2
+        compute_zones:
+        - compute_zone: A_ComputeA2_1
+        - compute_zone: A_ComputeA2_2
+    ilot_connections:
+      - ilconn_name: A1_1__to__A2_1
+        type: igress
+        source: A_ComputeA1_1
+        target: A_ComputeA2_1
+        protocol: https
+        ports:
+          - 443
+    inter_project_connections:
+      - inter_ilot_name: A1_2__to_SuperIlot_B_B1
+        type: egress
+        other_project_name: SuperIlot_Other
+        other_compute_zone: X1
+        own_compute_zone: A_ComputeA1_2
+    storage:
+      shared:
+        name: SupIl_A_sharedStorage
+        kind: S3
+        amount: 4TB
+      dedicated:
+        compute_zone: A_ComputeA1_2
+        type: SSD
+        amount: 500GB # or category  tiny, small, big, huge
+    whateva:
+      structure: whatNeeded
+
