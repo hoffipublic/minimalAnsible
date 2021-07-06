@@ -19,20 +19,33 @@ if [ "$2" = "-y" ] || [ "$2" = "--yaml" ] || [ "$3" = "-y" ] || [ "$3" = "--yaml
     yaml="--yaml"
 fi
 
+function evalToStderr() {
+    >&2 echo "$@"
+    eval "$@" >&2
+}
+
 set -e
 
 if [ ! -d "$configDir" ]; then
-    git clone "URL" "$configDir"
+    evalToStderr git clone "URL" "$configDir"
 else
+    >&2 echo pushd "$configDir"
     pushd "$configDir" > /dev/null 2>&1
-    # git stash > /dev/null
-#    git pull > /dev/null 2>&1
-    # git stash pop > /dev/null 2>&1
+    evalToStderr git stash
+    #evalToStderr git pull
+    set +e
+    evalToStderr git stash pop
+    set -e
+    >&2 echo popd
     popd > /dev/null 2>&1
 fi
 
 if [ "$1" = "--list" ]; then
-    ansible-inventory --inventory "${configDir}/hosts" --inventory "${configDir}/host_vars" --inventory "${configDir}/group_vars" --list $yaml      2> /dev/null
+    cmd="ansible-inventory --inventory \"${configDir}/hosts\" --inventory \"${configDir}/host_vars\" --inventory \"${configDir}/group_vars\" --list $yaml"
+    >&2 echo "$cmd"
+    eval "$cmd"
 elif [ "$1" = "--host" ]; then
-    ansible-inventory --inventory "${configDir}/hosts" --inventory "${configDir}/host_vars" --inventory "${configDir}/group_vars" --host "$2" $yaml 2> /dev/null
+    cmd="ansible-inventory --inventory \"${configDir}/hosts\" --inventory \"${configDir}/host_vars\" --inventory \"${configDir}/group_vars\" --host \"$2\" $yaml"
+    >&2 echo "$cmd"
+    eval "$cmd"
 fi

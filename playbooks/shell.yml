@@ -1,7 +1,8 @@
 ---
 
-- hosts: localhost
-  connection: local
+- hosts: myself
+# - hosts: localhost
+#   connection: local
   gather_facts: no
 
   vars:
@@ -22,6 +23,17 @@
 
 
   tasks:
+
+  - name: echo hostvar
+    shell:
+      cmd: 'echo -e "\n{{ myselfvar | to_nice_yaml }}\n{{ webserversvar | to_nice_yaml }}\n"'
+    when: inventory_hostname == "myself"
+    register: outVar
+
+  - name: echo outVar
+    debug:
+      msg: "outVar={{ outVar }}"
+
   - name: write variable to file {{ myfile | regex_replace('^.*/(.+/.+)$', './\1') }}
     copy:
       content: "{{ filevar }}"
