@@ -1,0 +1,15 @@
+---
+
+- hosts: DADC_DCH_OOB
+  connection: network_cli
+  gather_facts: no
+  collections:
+  - dellemc.os10
+
+  tasks:
+    - name: include variables
+      include_vars: '{{ playbook_dir }}/../dadc_network_config/dev/main_config.yml'
+
+    - name: custom debug output
+      debug:
+        msg: "custom var value: {{ dadc_config | to_nice_yaml }}"
