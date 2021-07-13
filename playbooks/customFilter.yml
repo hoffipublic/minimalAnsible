@@ -7,14 +7,24 @@
   vars:
     customYaml:
       customRoot:
-      - first: "first Value"
-        name: "first name"
-      - second: "second Value"
-        name: "second name"
-      - third: "third Value"
-        name: "third name"
+        key1: "key1 Value"
+        key2: "key2 Value"
+        key3:
+        - first: "first Value"
+          name: "first name"
+        - second: "second Value"
+          name: "second name"
+        - third: "third Value"
+          name: "third name"
+    yaml2:
+      customRoot:
+        key2: "key2 Value Changed"
+        keyNew: "keyNew Value New"
+        key3:
+        - first: "first Value Changed"
+        - name: "second name Changed"
 
-  # ansible will search dir filter_plugins/ by default on the same level as the playbook
+# ansible will search dir filter_plugins/ by default on the same level as the playbook
   # to have a "global" directory add the filter_plugins search dir to ansible.cfg
   # e.g. if at the project root
   # filter_plugins = ./filter_plugins
@@ -34,7 +44,7 @@
       msg: "\n{{ customYaml | to_nice_json }}\n"
   - name: jq filter
     set_fact:
-      transformedYaml: '{{ customYaml | jq("[.customRoot[].name]") }}'
+      transformedYaml: '{{ customYaml | jq("[.customRoot.key3[].name]") }}'
   - name: jq raw result
     debug:
       msg: "\n{{ transformedYaml }}\n"
@@ -44,3 +54,7 @@
   - name: something
     debug:
       msg: "{{ transformedYaml[0] }}"
+
+  - name: jq_merge filter
+    set_fact:
+      transformedYaml: '{{ customYaml | jq_merge(yaml2) }}'
