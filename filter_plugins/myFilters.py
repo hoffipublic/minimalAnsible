@@ -3,7 +3,7 @@ import json
 import subprocess
 import yaml
 
-
+from ansible.errors import AnsibleError, AnsibleFilterError, AnsibleFilterTypeError
 from ansible.module_utils._text import to_bytes, to_native, to_text
 from ansible.parsing.ajson import AnsibleJSONEncoder
 from ansible.parsing.yaml.dumper import AnsibleDumper
@@ -25,11 +25,18 @@ class FilterModule(object):
         return a_new_variable
 
     def jq_filter(self, jsonVar, jqCmd, jqOptions='', *args, **kw):
+        try:
+            subprocess.call(['jq', '--version'])
+        except FileNotFoundError:
+            raise AnsibleFilterError('jq not installed or available')
+
         cmd = ['bash', '-c', "echo '{}' | jq {} '{}'".format(json.dumps(jsonVar, cls=AnsibleJSONEncoder), jqOptions, jqCmd)]
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE,
                                   stderr=subprocess.PIPE)
         out, err = p.communicate()
-        return out.decode("utf-8")
+        if err:
+            raise AnsibleFilterError(err.decode('utf-8'))
+        return out.decode('utf-8')
 
     # def jq_filter(self, a, indent=2, sort_keys=False, *args, **kw):
     #     transformed = json.dumps(a, cls=AnsibleJSONEncoder, indent=indent, sort_keys=sort_keys, separators=(',', ': '), *args, **kw)
