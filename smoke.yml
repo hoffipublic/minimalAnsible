@@ -1,15 +1,77 @@
 ---
 
-- hosts: DADC_DCH_OOB
-  connection: network_cli
+- hosts: localhost
+  connection: local
   gather_facts: no
   collections:
-  - dellemc.os10
+  - marmorag.chunk
+
+  vars:
+    prjRoot: "{{ playbook_dir }}"
 
   tasks:
     - name: include variables
-      include_vars: '{{ playbook_dir }}/../dadc_network_config/dev/main_config.yml'
+      include_vars:
+        dir: '{{ playbook_dir }}/../externalConfig/dev'
 
     - name: custom debug output
       debug:
         msg: "custom var value: {{ dadc_config | to_nice_yaml }}"
+
+    - name: external collection call
+      set_fact:
+        your_list: [0,1,2,3,4]
+
+    - name: chunk list
+      chunk:
+        src: "{{ your_list  }}"
+        size: 2
+      register: chunked
+    
+    - name: chunk output
+      debug:
+        msg: "{{ chunked }}"
+
+    - name: debugout complete ilotFacts
+      debug:
+        var: ilotFacts
+
+    - name: access specific ilotFact
+      debug:
+        var: ilotFacts.SuperIlot_A.SuperIlot_A__subIlot_A1__A_ComputeA1_1.interface_address
+
+    - name: indirect
+      set_fact:
+        theIndirect: '{{ ilotFacts | dadcQuery("SuperIlot_A") }}'
+        # theIndirect: '{{ ilotFacts | json_query("{project_name}.{compute_zone_name}".format(project_name=the_project_name, compute_zone_name=the_project_name+SEP+the_ilot_name+SEP+the_compute_zone_name)) }}'
+      vars:
+        the_project_name: SuperIlot_A
+        the_ilot_name: subIlot_A1
+        the_compute_zone_name: A_ComputeA1_1
+    - name: indirect output
+      debug:
+        msg: "\n{{ theIndirect | to_nice_yaml }}\n"
+    
+    # - name: ilotFacts iteration
+    #   set_fact:
+    #     theComputeZoneData: "{{ lookup('template', '{{ prjRoot }}/templates/config_compute_zones.j2') }}"
+    # - name: ilotFacts iteration output
+    #   debug:
+    #     msg: "\n{{ theComputeZoneData }}\n"
+
+    - name: dadcJoin
+      debug:
+        msg: "{{ project_name | dadcJoin(ilot_name, compute_zone_name) }}"
+      vars:
+        project_name: SuperIlot_A
+        ilot_name: subIlot_A1
+        compute_zone_name: A_ComputeA1_1
+
+    # {{ project_name | dadcJoin(ilot_name, compute_zone_name) }}
+    - name: dadc naming convention helpers
+      debug:
+        msg: "{{ ilotFacts | dadcFact_compute_zone_Query('deeper', project_name, ilot_name, compute_zone_name) }}"
+      vars:
+        project_name: SuperIlot_A
+        ilot_name: subIlot_A1
+        compute_zone_name: A_ComputeA1_1
